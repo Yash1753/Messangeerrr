@@ -95,15 +95,15 @@ export const updateProfile = async (req, res) => {
         const {profilePicture} = req.body;
         const userID = req.user._id //jo mera protect route h usse authenticated user is coming {its id is coming}
         if(!profilePicture){
-            res.status(400).send({error: 'Profile picture does not exist'});
+            return res.status(400).send({error: 'Profile picture does not exist'});
         }
 
         const uploadResponse = await cloudinary.uploader.upload(profilePicture)
         const updatedUser = await User.findByIdAndUpdate(userID, {
-            profilePicture: uploadResponse.secure_url,
+            profilePicture: uploadResponse.secure_url
         },{
             new: true  //its significvance -> shows the updated result immediate as by default update return object as it was before update
-        })
+        });
 
         res.status(200).json(updatedUser);
     }catch(e){
